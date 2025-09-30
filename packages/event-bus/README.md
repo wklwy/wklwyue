@@ -65,6 +65,290 @@ bus.on("*", (type, data) => {
 });
 ```
 
+## 框架集成
+
+### Vue 3 使用示例
+
+```typescript
+// eventBus.ts - 创建全局事件总线
+import mitt from "@wklwyue/event-bus";
+
+interface AppEvents {
+  userLogin: { userId: string; username: string };
+  userLogout: void;
+  themeChange: { theme: "light" | "dark" };
+  cartUpdate: { count: number };
+}
+
+export const eventBus = mitt<AppEvents>();
+```
+
+```vue
+<!-- Login.vue -->
+<template>
+  <div>
+    <button @click="handleLogin">登录</button>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { eventBus } from "./eventBus";
+
+const handleLogin = () => {
+  // 模拟登录
+  const userData = { userId: "123", username: "wklwyue" };
+
+  // 触发登录事件
+  eventBus.emit("userLogin", userData);
+};
+</script>
+```
+
+```vue
+<!-- Header.vue -->
+<template>
+  <div>
+    <span v-if="user">欢迎, {{ user.username }}</span>
+    <button v-else @click="showLogin">登录</button>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted, onUnmounted } from "vue";
+import { eventBus } from "./eventBus";
+
+const user = ref<{ userId: string; username: string } | null>(null);
+
+const handleUserLogin = (userData: { userId: string; username: string }) => {
+  user.value = userData;
+};
+
+const handleUserLogout = () => {
+  user.value = null;
+};
+
+onMounted(() => {
+  // 监听用户登录事件
+  eventBus.on("userLogin", handleUserLogin);
+  eventBus.on("userLogout", handleUserLogout);
+});
+
+onUnmounted(() => {
+  // 清理事件监听
+  eventBus.off("userLogin", handleUserLogin);
+  eventBus.off("userLogout", handleUserLogout);
+});
+</script>
+```
+
+### React 使用示例
+
+```typescript
+// eventBus.ts - 创建全局事件总线
+import mitt from "@wklwyue/event-bus";
+
+interface AppEvents {
+  userLogin: { userId: string; username: string };
+  userLogout: void;
+  themeChange: { theme: "light" | "dark" };
+  cartUpdate: { count: number };
+}
+
+export const eventBus = mitt<AppEvents>();
+```
+
+```tsx
+// Login.tsx
+import React from "react";
+import { eventBus } from "./eventBus";
+
+const Login: React.FC = () => {
+  const handleLogin = () => {
+    // 模拟登录
+    const userData = { userId: "123", username: "wklwyue" };
+
+    // 触发登录事件
+    eventBus.emit("userLogin", userData);
+  };
+
+  return (
+    <div>
+      <button onClick={handleLogin}>登录</button>
+    </div>
+  );
+};
+
+export default Login;
+```
+
+```tsx
+// Header.tsx
+import React, { useState, useEffect } from "react";
+import { eventBus } from "./eventBus";
+
+interface User {
+  userId: string;
+  username: string;
+}
+
+const Header: React.FC = () => {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    // 事件处理函数
+    const handleUserLogin = (userData: User) => {
+      setUser(userData);
+    };
+
+    const handleUserLogout = () => {
+      setUser(null);
+    };
+
+    // 监听事件
+    eventBus.on("userLogin", handleUserLogin);
+    eventBus.on("userLogout", handleUserLogout);
+
+    // 清理函数
+    return () => {
+      eventBus.off("userLogin", handleUserLogin);
+      eventBus.off("userLogout", handleUserLogout);
+    };
+  }, []);
+
+  return <div>{user ? <span>欢迎, {user.username}</span> : <button>登录</button>}</div>;
+};
+
+export default Header;
+```
+
+### 自定义 Hook (React)
+
+```tsx
+// useEventBus.ts
+import { useEffect, useCallback } from "react";
+import { eventBus } from "./eventBus";
+import type { EventType, Handler, WildcardHandler } from "@wklwyue/event-bus";
+
+interface AppEvents {
+  userLogin: { userId: string; username: string };
+  userLogout: void;
+  themeChange: { theme: "light" | "dark" };
+  cartUpdate: { count: number };
+}
+
+export const useEventBus = () => {
+  // 监听特定事件
+  const on = useCallback(<T extends keyof AppEvents>(type: T, handler: Handler<AppEvents[T]>) => {
+    eventBus.on(type, handler);
+    return () => eventBus.off(type, handler);
+  }, []);
+
+  // 监听通配符事件
+  const onAny = useCallback((handler: WildcardHandler<AppEvents>) => {
+    eventBus.on("*", handler);
+    return () => eventBus.off("*", handler);
+  }, []);
+
+  // 触发事件
+  const emit = useCallback(<T extends keyof AppEvents>(type: T, event: AppEvents[T]) => {
+    eventBus.emit(type, event);
+  }, []);
+
+  return { on, onAny, emit };
+};
+
+// 使用示例
+const UserProfile: React.FC = () => {
+  const { on, emit } = useEventBus();
+
+  useEffect(() => {
+    const cleanup = on("userLogin", (user) => {
+      console.log("用户登录:", user);
+    });
+
+    return cleanup; // 自动清理
+  }, [on]);
+
+  const handleLogout = () => {
+    emit("userLogout", undefined);
+  };
+
+  return <button onClick={handleLogout}>退出登录</button>;
+};
+```
+
+### Vue Composable
+
+```typescript
+// useEventBus.ts
+import { onUnmounted } from "vue";
+import { eventBus } from "./eventBus";
+import type { Handler, WildcardHandler } from "@wklwyue/event-bus";
+
+interface AppEvents {
+  userLogin: { userId: string; username: string };
+  userLogout: void;
+  themeChange: { theme: "light" | "dark" };
+  cartUpdate: { count: number };
+}
+
+export const useEventBus = () => {
+  const cleanupFunctions: (() => void)[] = [];
+
+  // 监听特定事件
+  const on = <T extends keyof AppEvents>(type: T, handler: Handler<AppEvents[T]>) => {
+    eventBus.on(type, handler);
+    const cleanup = () => eventBus.off(type, handler);
+    cleanupFunctions.push(cleanup);
+    return cleanup;
+  };
+
+  // 监听通配符事件
+  const onAny = (handler: WildcardHandler<AppEvents>) => {
+    eventBus.on("*", handler);
+    const cleanup = () => eventBus.off("*", handler);
+    cleanupFunctions.push(cleanup);
+    return cleanup;
+  };
+
+  // 触发事件
+  const emit = <T extends keyof AppEvents>(type: T, event: AppEvents[T]) => {
+    eventBus.emit(type, event);
+  };
+
+  // 组件卸载时自动清理
+  onUnmounted(() => {
+    cleanupFunctions.forEach((cleanup) => cleanup());
+  });
+
+  return { on, onAny, emit };
+};
+```
+
+```vue
+<!-- 使用 Composable 的组件 -->
+<template>
+  <div>
+    <button @click="handleLogout">退出登录</button>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { useEventBus } from "./useEventBus";
+
+const { on, emit } = useEventBus();
+
+// 监听用户登录事件
+on("userLogin", (user) => {
+  console.log("用户登录:", user);
+});
+
+const handleLogout = () => {
+  emit("userLogout", undefined);
+};
+</script>
+```
+
 ## API
 
 ### `mitt<Events>()`

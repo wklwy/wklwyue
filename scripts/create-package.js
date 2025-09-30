@@ -87,19 +87,6 @@ async function main() {
     JSON.stringify(tsconfigJson, null, 2)
   );
 
-  // tsup.config.ts
-  const tsupConfig = `import { defineConfig } from 'tsup';
-
-  export default defineConfig({
-    entry: ['src/index.ts'],
-    format: ['cjs', 'esm'],
-    dts: true,
-    sourcemap: true,
-    clean: true,
-  });
-  `;
-  fs.writeFileSync(path.join(pkgDir, "tsup.config.ts"), tsupConfig);
-
   // 创建默认 index.ts 和测试文件
   fs.writeFileSync(
     path.join(pkgDir, "src/index.ts"),

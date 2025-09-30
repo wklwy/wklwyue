@@ -88,6 +88,7 @@ pnpm publish
 ├── package.json             # 根配置 / Root config
 ├── pnpm-workspace.yaml      # workspace 配置 / Workspace config
 ├── tsconfig.base.json       # 基础 TS 配置 / Base TypeScript config
+├── tsup.config.ts           # 构建配置 / Build config
 ├── prettier.config.js       # Prettier 配置 / Prettier config
 └── README.md               # 项目文档 / Project documentation
 ```
