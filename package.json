@@ -1,0 +1,17 @@
+{
+  "name": "@wklwyue/monorepo",
+  "private": true,
+  "scripts": {
+    "build": "pnpm -r run build",
+    "publish": "pnpm -r --filter './packages/*' publish --access public",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "create-package": "node scripts/create-package.js"
+  },
+  "devDependencies": {
+    "@types/node": "^24.5.2",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}

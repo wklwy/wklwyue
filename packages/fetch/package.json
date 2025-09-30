@@ -1,0 +1,17 @@
+{
+  "name": "@wklwyue/fetch",
+  "version": "1.0.0",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "devDependencies": {
+    "axios": "^1.0.0"
+  },
+  "sideEffects": false
+}

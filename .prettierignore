@@ -1,0 +1,10 @@
+/node_modules/**
+/dist/
+/dist*
+/public/*
+/docs/*
+/src/types/env.d.ts
+/src/types/auto-components.d.ts
+/src/types/auto-imports.d.ts
+/docs/**/*
+CHANGELOG

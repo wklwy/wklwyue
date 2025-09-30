@@ -1,0 +1,16 @@
+root = true
+
+[*.{js,ts,vue}]
+indent_style = space                # 空格缩进,可选"space"、"tab"
+indent_size = 2                     # 缩进空格为2个
+end_of_line = lf                    # 结尾换行符，可选"lf"、"cr"、"crlf" (win = crlf || unix = lf)
+charset = utf-8                     # 文件编码是 utf-8
+trim_trailing_whitespace = true     # 不保留行末的空格
+insert_final_newline = true         # 文件末尾添加一个空行
+curly_bracket_next_line = false     # 大括号不另起一行
+spaces_around_operators = true      # 运算符两遍都有空格
+quote_type = double                 # 字符串使用双引号
+
+[*.md] # 仅 md 文件适用以下规则
+max_line_length = off # 关闭最大行长度限制
+trim_trailing_whitespace = false # 关闭末尾空格修剪

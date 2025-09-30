@@ -1,0 +1,46 @@
+{
+  "name": "@wklwyue/event-bus",
+  "version": "1.0.0",
+  "description": "轻量级事件总线，基于 mitt 思想进行增强，支持 TypeScript",
+  "keywords": [
+    "event",
+    "emitter",
+    "event-bus",
+    "mitt",
+    "typescript"
+  ],
+  "author": "wklwyue",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wklwy/wklwyue.git",
+    "directory": "packages/event-bus"
+  },
+  "homepage": "https://github.com/wklwy/wklwyue/tree/main/packages/event-bus",
+  "bugs": {
+    "url": "https://github.com/wklwy/wklwyue/issues"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "prepublishOnly": "pnpm build"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "sideEffects": false
+}
