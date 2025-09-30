@@ -32,7 +32,7 @@ describe("性能测试", () => {
     console.log(`移除999个监听器耗时: ${removeTime.toFixed(2)}ms`);
 
     // 验证所有处理器都被调用
-    handlers.forEach((handler) => {
+    handlers.forEach(handler => {
       expect(handler).toHaveBeenCalledWith(42);
     });
 

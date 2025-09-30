@@ -39,7 +39,7 @@ interface Events {
 const bus = mitt<Events>();
 
 // 监听事件
-bus.on("login", (data) => {
+bus.on("login", data => {
   console.log("用户登录:", data.userId); // 完整的类型推断
 });
 
@@ -262,7 +262,7 @@ const UserProfile: React.FC = () => {
   const { on, emit } = useEventBus();
 
   useEffect(() => {
-    const cleanup = on("userLogin", (user) => {
+    const cleanup = on("userLogin", user => {
       console.log("用户登录:", user);
     });
 
@@ -318,7 +318,7 @@ export const useEventBus = () => {
 
   // 组件卸载时自动清理
   onUnmounted(() => {
-    cleanupFunctions.forEach((cleanup) => cleanup());
+    cleanupFunctions.forEach(cleanup => cleanup());
   });
 
   return { on, onAny, emit };
@@ -339,7 +339,7 @@ import { useEventBus } from "./useEventBus";
 const { on, emit } = useEventBus();
 
 // 监听用户登录事件
-on("userLogin", (user) => {
+on("userLogin", user => {
   console.log("用户登录:", user);
 });
 
@@ -360,7 +360,7 @@ const handleLogout = () => {
 添加事件监听器。
 
 ```typescript
-bus.on("eventName", (data) => {
+bus.on("eventName", data => {
   // 处理事件
 });
 
@@ -375,7 +375,7 @@ bus.on("*", (type, data) => {
 添加一次性事件监听器，执行一次后自动移除。
 
 ```typescript
-bus.once("eventName", (data) => {
+bus.once("eventName", data => {
   // 只会执行一次
 });
 ```

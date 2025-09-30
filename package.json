@@ -6,10 +6,13 @@
     "publish": "pnpm -r --filter './packages/*' publish --access public",
     "test": "vitest run",
     "test:watch": "vitest",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "create-package": "node scripts/create-package.js"
   },
   "devDependencies": {
     "@types/node": "^24.5.2",
+    "prettier": "^3.6.2",
     "tsup": "^8.0.0",
     "typescript": "^5.0.0",
     "vitest": "^3.0.0"

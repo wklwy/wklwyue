@@ -9,17 +9,12 @@ export type EventMap = Record<EventType, any>;
 export type Handler<T = unknown> = (event: T) => void;
 
 // 通配（*）事件处理函数，会接收到事件名与事件数据
-export type WildcardHandler<T extends EventMap> = (
-  type: keyof T,
-  event: T[keyof T]
-) => void;
+export type WildcardHandler<T extends EventMap> = (type: keyof T, event: T[keyof T]) => void;
 
 // 某个事件类型对应的处理器列表
 export type EventHandlerList<T = unknown> = Array<Handler<T>>;
 // 通配符事件处理器列表
-export type WildCardEventHandlerList<T extends EventMap> = Array<
-  WildcardHandler<T>
->;
+export type WildCardEventHandlerList<T extends EventMap> = Array<WildcardHandler<T>>;
 
 // 事件映射：事件名 -> 处理函数数组
 export type EventHandlerMap<Events extends EventMap> = Map<
@@ -37,24 +32,16 @@ export interface Emitter<Events extends EventMap> {
   on(type: "*", handler: WildcardHandler<Events>): void;
 
   /** 仅触发一次的监听 */
-  once<Key extends keyof Events>(
-    type: Key,
-    handler: Handler<Events[Key]>
-  ): void;
+  once<Key extends keyof Events>(type: Key, handler: Handler<Events[Key]>): void;
   once(type: "*", handler: WildcardHandler<Events>): void;
 
   /** 取消监听，若不传 handler 则移除该事件所有监听 */
-  off<Key extends keyof Events>(
-    type: Key,
-    handler?: Handler<Events[Key]>
-  ): void;
+  off<Key extends keyof Events>(type: Key, handler?: Handler<Events[Key]>): void;
   off(type: "*", handler?: WildcardHandler<Events>): void;
 
   /** 触发事件（同步执行所有监听器） */
   emit<Key extends keyof Events>(type: Key, event: Events[Key]): void;
-  emit<Key extends keyof Events>(
-    type: undefined extends Events[Key] ? Key : never
-  ): void;
+  emit<Key extends keyof Events>(type: undefined extends Events[Key] ? Key : never): void;
 
   /** 判断是否存在监听器 */
   has<Key extends keyof Events>(type: Key): boolean;
@@ -76,9 +63,7 @@ export interface Emitter<Events extends EventMap> {
 }
 
 // 内部通用处理器联合类型
-type GenericEventHandler<Events extends EventMap> =
-  | Handler<Events[keyof Events]>
-  | WildcardHandler<Events>;
+type GenericEventHandler<Events extends EventMap> = Handler<Events[keyof Events]> | WildcardHandler<Events>;
 
 /**
  * 轻量事件总线（基于 mitt 思想进行增强）：
@@ -86,9 +71,7 @@ type GenericEventHandler<Events extends EventMap> =
  * - 优化：使用 for...of 代替 map 副作用调用；off 时当列表为空直接删除键，减小内存占用
  * - 中文注释 & 改善类型
  */
-export default function mitt<Events extends EventMap>(
-  all?: EventHandlerMap<Events>
-): Emitter<Events> {
+export default function mitt<Events extends EventMap>(all?: EventHandlerMap<Events>): Emitter<Events> {
   all = all || new Map();
 
   function getArray(type: keyof Events | "*") {
@@ -97,13 +80,8 @@ export default function mitt<Events extends EventMap>(
 
   function add(type: keyof Events | "*", handler: GenericEventHandler<Events>) {
     // 防止原型污染
-    if (
-      typeof type === "string" &&
-      (type === "__proto__" || type === "constructor" || type === "prototype")
-    ) {
-      throw new Error(
-        `Event type "${type}" is not allowed for security reasons`
-      );
+    if (typeof type === "string" && (type === "__proto__" || type === "constructor" || type === "prototype")) {
+      throw new Error(`Event type "${type}" is not allowed for security reasons`);
     }
 
     const list = getArray(type);
@@ -175,10 +153,7 @@ export default function mitt<Events extends EventMap>(
             (handlersCopy[i] as Handler<any>)(evt);
           } catch (error) {
             // 在开发环境下输出错误，生产环境下静默处理
-            if (
-              typeof process !== "undefined" &&
-              process.env?.NODE_ENV === "development"
-            ) {
+            if (typeof process !== "undefined" && process.env?.NODE_ENV === "development") {
               console.error("Event handler error:", error);
             }
           }
@@ -193,10 +168,7 @@ export default function mitt<Events extends EventMap>(
             (wildcardCopy[i] as WildcardHandler<Events>)(type, evt);
           } catch (error) {
             // 在开发环境下输出错误，生产环境下静默处理
-            if (
-              typeof process !== "undefined" &&
-              process.env?.NODE_ENV === "development"
-            ) {
+            if (typeof process !== "undefined" && process.env?.NODE_ENV === "development") {
               console.error("Wildcard handler error:", error);
             }
           }
@@ -234,16 +206,11 @@ export default function mitt<Events extends EventMap>(
     checkMemoryLeaks(warningThreshold = 1000) {
       const total = this.listenerCountAll();
       if (total > warningThreshold) {
-        if (
-          typeof process !== "undefined" &&
-          process.env?.NODE_ENV === "development"
-        ) {
-          console.warn(
-            `Warning: ${total} event handlers registered. Potential memory leak?`
-          );
+        if (typeof process !== "undefined" && process.env?.NODE_ENV === "development") {
+          console.warn(`Warning: ${total} event handlers registered. Potential memory leak?`);
         }
       }
       return total;
-    },
+    }
   } as Emitter<Events>;
 }

@@ -12,7 +12,7 @@ export default defineConfig({
   target: "es2019",
   outExtension({ format }) {
     return {
-      js: format === "cjs" ? ".js" : ".mjs",
+      js: format === "cjs" ? ".js" : ".mjs"
     };
-  },
+  }
 });

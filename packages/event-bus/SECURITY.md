@@ -11,12 +11,12 @@
 
 ```typescript
 // ❌ 危险：执行用户输入的代码
-bus.on("user-action", (data) => {
+bus.on("user-action", data => {
   eval(data.code); // 极度危险！
 });
 
 // ✅ 安全：验证和清理输入
-bus.on("user-action", (data) => {
+bus.on("user-action", data => {
   if (typeof data.action === "string" && ALLOWED_ACTIONS.includes(data.action)) {
     handleAction(data.action);
   }
@@ -24,7 +24,6 @@ bus.on("user-action", (data) => {
 ```
 
 2. **防止原型污染**
-
    - 库已内置保护，阻止使用 `__proto__`、`constructor`、`prototype` 作为事件名
    - 仍建议使用明确的事件名称
 
@@ -36,7 +35,7 @@ bus.on("user-action", (data) => {
 ```typescript
 // React 示例
 useEffect(() => {
-  const handler = (data) => {
+  const handler = data => {
     /* ... */
   };
   bus.on("event", handler);
@@ -48,7 +47,6 @@ useEffect(() => {
 ```
 
 4. **错误处理**
-
    - 库已内置错误隔离，单个处理器出错不会影响其他处理器
    - 建议在处理器内部也添加适当的错误处理
 
@@ -58,7 +56,7 @@ useEffect(() => {
 
 ```typescript
 // ✅ 安全的数据验证
-bus.on("user-data", (data) => {
+bus.on("user-data", data => {
   if (!isValidUserData(data)) {
     console.warn("Invalid user data received");
     return;

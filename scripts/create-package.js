@@ -6,13 +6,13 @@ const readline = require("readline");
 // 创建读取接口
 const rl = readline.createInterface({
   input: process.stdin,
-  output: process.stdout,
+  output: process.stdout
 });
 
 // 提示用户输入的函数
 function askForPackageName() {
-  return new Promise((resolve) => {
-    rl.question("请输入包名: ", (answer) => {
+  return new Promise(resolve => {
+    rl.question("请输入包名: ", answer => {
       rl.close();
       resolve(answer.trim());
     });
@@ -65,33 +65,24 @@ async function main() {
     types: "dist/index.d.ts",
     files: ["dist"],
     scripts: {
-      build: "tsup",
+      build: "tsup"
     },
-    sideEffects: false,
+    sideEffects: false
   };
-  fs.writeFileSync(
-    path.join(pkgDir, "package.json"),
-    JSON.stringify(packageJson, null, 2)
-  );
+  fs.writeFileSync(path.join(pkgDir, "package.json"), JSON.stringify(packageJson, null, 2));
 
   // tsconfig.json
   const tsconfigJson = {
     extends: "../../tsconfig.base.json",
     compilerOptions: {
-      outDir: "dist",
+      outDir: "dist"
     },
-    include: ["src", "__tests__"],
+    include: ["src", "__tests__"]
   };
-  fs.writeFileSync(
-    path.join(pkgDir, "tsconfig.json"),
-    JSON.stringify(tsconfigJson, null, 2)
-  );
+  fs.writeFileSync(path.join(pkgDir, "tsconfig.json"), JSON.stringify(tsconfigJson, null, 2));
 
   // 创建默认 index.ts 和测试文件
-  fs.writeFileSync(
-    path.join(pkgDir, "src/index.ts"),
-    `export const hello = () => console.log('Hello ${pkgName}');\n`
-  );
+  fs.writeFileSync(path.join(pkgDir, "src/index.ts"), `export const hello = () => console.log('Hello ${pkgName}');\n`);
   fs.writeFileSync(
     path.join(pkgDir, "__tests__/index.test.ts"),
     `import { describe, it, expect, vi } from 'vitest';
@@ -109,7 +100,7 @@ describe('${pkgName}', () => {
 }
 
 // 运行主函数
-main().catch((error) => {
+main().catch(error => {
   console.error("创建包时发生错误:", error);
   process.exit(1);
 });

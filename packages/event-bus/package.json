@@ -1,6 +1,6 @@
 {
   "name": "@wklwyue/event-bus",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "轻量级事件总线，基于 mitt 思想进行增强，支持 TypeScript",
   "keywords": [
     "event",
