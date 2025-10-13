@@ -1,17 +1,59 @@
 {
   "name": "@wklwyue/fetch",
   "version": "1.0.0",
-  "main": "dist/index.cjs",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "description": "基于 axios 封装的 HTTP 请求库，支持请求重试，支持 TypeScript",
+  "keywords": [
+    "axios",
+    "fetch",
+    "http",
+    "request",
+    "typescript"
+  ],
+  "author": "wklwyue",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wklwy/wklwyue.git",
+    "directory": "packages/fetch"
+  },
+  "homepage": "https://github.com/wklwy/wklwyue/tree/main/packages/fetch",
+  "bugs": {
+    "url": "https://github.com/wklwy/wklwyue/issues"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "browser": {
+    "./dist/index.js": "./dist/index.mjs"
+  },
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
   "scripts": {
-    "build": "tsup"
+    "build": "tsup",
+    "test": "vitest run",
+    "prepublishOnly": "pnpm build"
+  },
+  "dependencies": {
+    "axios": "^1.0.0"
   },
   "devDependencies": {
-    "axios": "^1.0.0"
+    "@types/node": "^20.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=14"
   },
   "sideEffects": false
 }

@@ -30,24 +30,6 @@ pnpm add @wklwyue/fetch
 
 ## 🚀 快速上手
 
-该库提供一个默认导出的实例，可直接用于快速发起请求。
-
-```javascript
-import http from "@wklwyue/fetch";
-
-async function getUser() {
-  try {
-    const user = await http.get("/api/user/1");
-    console.log(user); // 直接获取后端返回的 data 字段
-  } catch (error) {
-    // 自动处理了网络错误、HTTP错误和业务错误
-    console.error(error.message);
-  }
-}
-```
-
-## 🔧 高级用法：创建自定义实例
-
 为了应用的健壮性和可维护性，本项目只支持使用 `createHttpRequest` 工厂函数来创建独立的、配置隔离的实例。
 
 ```javascript

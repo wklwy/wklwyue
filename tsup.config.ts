@@ -10,6 +10,8 @@ export default defineConfig({
   treeshake: true,
   splitting: false,
   target: "es2019",
+  platform: "neutral", // 支持浏览器和 Node.js
+  external: ["mitt", "axios"],
   outExtension({ format }) {
     return {
       js: format === "cjs" ? ".js" : ".mjs"
